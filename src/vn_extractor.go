@@ -1,11 +1,10 @@
-package vnextractor
+package main
 
 import (
 	"fmt"
 	"os"
 	"os/exec"
 
-	"github.com/Dominux/vn2vn/constants"
 	"github.com/google/uuid"
 )
 
@@ -28,8 +27,8 @@ func NewVNExtractor(basePath string) (*VNExtractor, error) {
 }
 
 func (v *VNExtractor) ExtractAudio(id uuid.UUID) error {
-	inputFullPath := v.buildFullPath(id, constants.InputVN)
-	outputFullPath := v.buildFullPath(id, constants.InputAudio)
+	inputFullPath := v.buildFullPath(id, InputVN)
+	outputFullPath := v.buildFullPath(id, InputAudio)
 	cmd := exec.Command(
 		"ffmpeg",
 		"-y",

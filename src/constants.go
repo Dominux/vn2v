@@ -1,4 +1,4 @@
-package constants
+package main
 
 const (
 	InputVN    string = "input_vn.mp4"
