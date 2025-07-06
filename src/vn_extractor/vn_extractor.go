@@ -3,6 +3,7 @@ package vnextractor
 import (
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/Dominux/vn2vn/constants"
 	"github.com/google/uuid"
@@ -14,20 +15,39 @@ type VNExtractor struct {
 
 func NewVNExtractor(basePath string) (*VNExtractor, error) {
 	// Removing base path
-	removeBasePath(basePath)
+	// if err := removeBasePath(basePath); err != nil {
+	// 	return nil, err
+	// }
 
 	// Making base path
-	err := os.MkdirAll(basePath, os.ModePerm)
-	if err != nil {
+	if err := os.MkdirAll(basePath, os.ModePerm); err != nil {
 		return nil, err
 	}
 
 	return &VNExtractor{basePath: basePath}, nil
 }
 
-func (v *VNExtractor) ExtractAudio(id uuid.UUID) {
-	fullPath := v.buildFullPath(id, constants.InputVN)
-	command := fmt.Sprintf("ffmpeg -i %s")
+func (v *VNExtractor) ExtractAudio(id uuid.UUID) error {
+	inputFullPath := v.buildFullPath(id, constants.InputVN)
+	outputFullPath := v.buildFullPath(id, constants.InputAudio)
+	cmd := exec.Command(
+		"ffmpeg",
+		"-y",
+		"-i",
+		inputFullPath,
+		"-map",
+		"0:a",
+		"-acodec",
+		"libmp3lame",
+		outputFullPath,
+	)
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (v *VNExtractor) buildFullPath(id uuid.UUID, filename string) string {
@@ -35,5 +55,8 @@ func (v *VNExtractor) buildFullPath(id uuid.UUID, filename string) string {
 }
 
 func removeBasePath(basePath string) error {
+	if _, err := os.Stat(basePath); err != nil {
+		return nil
+	}
 	return os.RemoveAll(basePath)
 }
