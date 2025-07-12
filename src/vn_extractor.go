@@ -34,10 +34,6 @@ func (v *VNExtractor) ExtractAudio(id uuid.UUID) error {
 		"-y",
 		"-i",
 		inputFullPath,
-		"-map",
-		"0:a",
-		"-acodec",
-		"libmp3lame",
 		outputFullPath,
 	)
 	cmd.Stderr = os.Stderr
