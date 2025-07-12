@@ -1,1 +1,1 @@
-whisperx
+whisperx==3.4.2

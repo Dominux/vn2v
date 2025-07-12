@@ -27,10 +27,16 @@ RUN pip install --prefix=/runtime --force-reinstall ctranslate2==4.5.0
 # Runtime stage
 FROM base AS runtime
 COPY --from=builder /runtime /usr/local
+RUN mkdir /models
+
 RUN apt update && apt install -y curl git-lfs ffmpeg
 
 ENV LD_LIBRARY_PATH=/usr/local/lib/python3.11/site-packages/nvidia/cudnn/lib
 
-WORKDIR /
+WORKDIR /app
+COPY ./main.py ./
+COPY ./run.sh ./
+RUN chmod +x run.sh
 
-CMD ["sh"]
+# CMD [ "sh" ]
+CMD [ "sh", "./run.sh" ]
