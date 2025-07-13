@@ -1,4 +1,6 @@
 import gc
+import os
+import time
 
 import whisperx
 import torch
@@ -7,13 +9,23 @@ import torch
 device = "cuda"
 batch_size = 16 # reduce if low on GPU mem
 compute_type = "float16" # change to "int8" if low on GPU mem (may reduce accuracy)
-base_path = '/audios'
+audio_path = '/audios/input_audio.wav'
 
 
+def main():
+    while True:
+        if not os.path.exists(audio_path):
+            print('waiting for input file')
+            time.sleep(1)
+            continue
 
-def transcribe(id: str):
-    audio_path = f"{base_path}/input_audio.wav"
+        transcribe()
 
+        # removing file
+        os.remove(audio_path)
+
+
+def transcribe():
     model = whisperx.load_model(
         "/models",
         device,
@@ -36,4 +48,4 @@ def transcribe(id: str):
 
 
 if __name__ == '__main__':
-    transcribe('')
+    main()

@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-
-	"github.com/google/uuid"
 )
 
 type VNExtractor struct {
@@ -18,17 +16,12 @@ func NewVNExtractor(basePath string) (*VNExtractor, error) {
 	// 	return nil, err
 	// }
 
-	// Making base path
-	if err := os.MkdirAll(basePath, os.ModePerm); err != nil {
-		return nil, err
-	}
-
 	return &VNExtractor{basePath: basePath}, nil
 }
 
-func (v *VNExtractor) ExtractAudio(id uuid.UUID) error {
-	inputFullPath := v.buildFullPath(id, InputVN)
-	outputFullPath := v.buildFullPath(id, InputAudio)
+func (v *VNExtractor) ExtractAudio() error {
+	inputFullPath := v.buildFullPath(InputVN)
+	outputFullPath := v.buildFullPath(InputAudio)
 	cmd := exec.Command(
 		"ffmpeg",
 		"-y",
@@ -45,8 +38,8 @@ func (v *VNExtractor) ExtractAudio(id uuid.UUID) error {
 	return nil
 }
 
-func (v *VNExtractor) buildFullPath(id uuid.UUID, filename string) string {
-	return fmt.Sprintf("%s/%s/%s", v.basePath, id.String(), filename)
+func (v *VNExtractor) buildFullPath(filename string) string {
+	return fmt.Sprintf("%s%s", v.basePath, filename)
 }
 
 func removeBasePath(basePath string) error {
