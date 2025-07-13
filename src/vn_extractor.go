@@ -38,6 +38,29 @@ func (v *VNExtractor) ExtractAudio() error {
 	return nil
 }
 
+func (v *VNExtractor) ExtractImage() error {
+	inputFullPath := v.buildFullPath(InputVN)
+	outputFullPath := v.buildFullPath(Screenshot)
+	cmd := exec.Command(
+		"ffmpeg",
+		"-ss",
+		"00:00:02",
+		"-y",
+		"-i",
+		inputFullPath,
+		"-frames:v",
+		"1",
+		outputFullPath,
+	)
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (v *VNExtractor) buildFullPath(filename string) string {
 	return fmt.Sprintf("%s%s", v.basePath, filename)
 }

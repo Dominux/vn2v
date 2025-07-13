@@ -11,4 +11,8 @@ func main() {
 	if err := vnExtractor.ExtractAudio(); err != nil {
 		panic(err)
 	}
+
+	if err := vnExtractor.ExtractImage(); err != nil {
+		panic(err)
+	}
 }

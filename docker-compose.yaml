@@ -1,9 +1,9 @@
 services:
-  vn2vn-speech2text:
-    container_name: vn2vn-speech2text
-    image: vn2vn-speech2text
+  vn2vn-transcriber:
+    container_name: vn2vn-transcriber
+    image: vn2vn-transcriber
     build:
-      context: ./src/services/speech2text
+      context: ./src/services/transcriber
       dockerfile: Dockerfile
     tty: true
     stdin_open: true
