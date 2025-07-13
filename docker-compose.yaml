@@ -1,3 +1,7 @@
+volumes:
+  vn2vn-llm-volume:
+    name: vn2vn-llm-volume
+
 services:
   vn2vn-transcriber:
     container_name: vn2vn-transcriber
@@ -6,9 +10,27 @@ services:
       context: ./src/services/transcriber
       dockerfile: Dockerfile
     tty: true
-    stdin_open: true
     volumes:
       - ./data:/audios
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  vn2vn-llm:
+    container_name: vn2vn-llm
+    image: vn2vn-llm
+    build:
+      context: ./src/services/llm
+      dockerfile: Dockerfile
+    ports:
+      - 11434:11434
+    tty: true
+    volumes:
+      - vn2vn-llm-volume:/models
     deploy:
       resources:
         reservations:
