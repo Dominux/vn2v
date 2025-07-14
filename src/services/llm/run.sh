@@ -11,7 +11,9 @@ else
   echo "Downloaded model"
 fi
 
-/bin/ollama serve &
-# maybe move this to the main container
-sleep 5 && ollama create "t2i" -f Modelfile
-wait
+# creating models in background
+sh -c "sleep 3 &&
+  ollama create "t2i" -f ./modelfiles/sdxl-prompter.Modelfile" &
+
+# Running Ollama
+/bin/ollama serve
