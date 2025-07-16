@@ -1,6 +1,8 @@
 volumes:
   vn2vn-llm-volume:
     name: vn2vn-llm-volume
+  vn2vn-t2i-volume:
+    name: vn2vn-t2i-volume
 
 services:
   vn2vn-transcriber:
@@ -26,11 +28,27 @@ services:
     build:
       context: ./src/services/llm
       dockerfile: Dockerfile
-    ports:
-      - 11434:11434
     tty: true
     volumes:
       - vn2vn-llm-volume:/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  vn2vn-t2i:
+    container_name: vn2vn-t2i
+    image: vn2vn-t2i
+    build:
+      context: ./src/services/t2i
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./data:/data
+      - vn2vn-t2i-volume:/models
     deploy:
       resources:
         reservations:
