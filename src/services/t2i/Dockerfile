@@ -12,7 +12,7 @@ ENV PYTHONFAULTHANDLER=1 \
   PATH="$PATH:/runtime/bin" \
   PYTHONPATH="$PYTHONPATH:/runtime/lib/python3.11/site-packages"
 
-RUN apt update && apt install -y build-essential unzip wget
+RUN apt update && apt install -y build-essential unzip
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"
 ENV CUDA_LAUNCH_BLOCKING 1
@@ -26,10 +26,16 @@ RUN pip install --prefix=/runtime --force-reinstall -r requirements.txt
 # Runtime stage
 FROM base AS runtime
 COPY --from=builder /runtime /usr/local
-COPY --from=builder /usr/bin/wget /usr/bin/wget
-RUN apt update && apt install -y wget
+RUN apt update && apt install -y git-lfs wget libgl1 libglib2.0-0 unzip
 
 WORKDIR /app
+
+RUN mkdir ./ip_adapter && \
+  wget https://raw.githubusercontent.com/instantX-research/InstantID/e6b1f21b6edbcc26e6ffa151aba603982c15c92c/pipeline_stable_diffusion_xl_instantid.py -O ./pipeline_stable_diffusion_xl_instantid.py && \
+  wget https://raw.githubusercontent.com/instantX-research/InstantID/e6b1f21b6edbcc26e6ffa151aba603982c15c92c/ip_adapter/attention_processor.py -O ./ip_adapter/attention_processor.py && \
+  wget https://raw.githubusercontent.com/instantX-research/InstantID/e6b1f21b6edbcc26e6ffa151aba603982c15c92c/ip_adapter/resampler.py -O ./ip_adapter/resampler.py && \
+  wget https://raw.githubusercontent.com/instantX-research/InstantID/e6b1f21b6edbcc26e6ffa151aba603982c15c92c/ip_adapter/utils.py -O ./ip_adapter/utils.py
+
 COPY ./main.py ./main.py
 COPY ./schemas.py ./schemas.py
 COPY ./generator.py ./generator.py

@@ -7,3 +7,5 @@ transformers==4.53.2
 diffusers==0.34.0
 opencv-python==4.12.0.88
 accelerate==1.8.1
+insightface==0.7.3
+onnxruntime-gpu==1.22.0
