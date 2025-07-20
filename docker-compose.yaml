@@ -5,22 +5,22 @@ volumes:
     name: vn2vn-t2i-volume
 
 services:
-  vn2vn-transcriber:
-    container_name: vn2vn-transcriber
-    image: vn2vn-transcriber
-    build:
-      context: ./src/services/transcriber
-      dockerfile: Dockerfile
-    tty: true
-    volumes:
-      - ./data:/audios
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+  # vn2vn-transcriber:
+  #   container_name: vn2vn-transcriber
+  #   image: vn2vn-transcriber
+  #   build:
+  #     context: ./src/services/transcriber
+  #     dockerfile: Dockerfile
+  #   tty: true
+  #   volumes:
+  #     - ./data:/audios
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [gpu]
 
   vn2vn-llm:
     container_name: vn2vn-llm
@@ -39,20 +39,20 @@ services:
               count: 1
               capabilities: [gpu]
 
-  vn2vn-t2i:
-    container_name: vn2vn-t2i
-    image: vn2vn-t2i
-    build:
-      context: ./src/services/t2i
-      dockerfile: Dockerfile
-    tty: true
-    volumes:
-      - ./data:/data
-      - vn2vn-t2i-volume:/models
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+  # vn2vn-t2i:
+  #   container_name: vn2vn-t2i
+  #   image: vn2vn-t2i
+  #   build:
+  #     context: ./src/services/t2i
+  #     dockerfile: Dockerfile
+  #   tty: true
+  #   volumes:
+  #     - ./data:/data
+  #     - vn2vn-t2i-volume:/models
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [gpu]

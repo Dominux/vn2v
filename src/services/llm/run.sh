@@ -13,7 +13,8 @@ fi
 
 # creating models in background
 sh -c "sleep 3 &&
-  ollama create "t2i" -f ./modelfiles/sdxl-prompter.Modelfile" &
+  ollama create "t2i" -f ./modelfiles/sdxl-prompter.Modelfile &&
+  ollama create "i2v" -f ./modelfiles/wan-video-prompter.Modelfile" &
 
 # Running Ollama
 /bin/ollama serve
